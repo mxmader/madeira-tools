@@ -2,24 +2,22 @@ import json
 import logging
 
 import boto3
-from madeira_utils import godaddy_dns, utils
-import madeira_utils
+from madeira_utils import godaddy_dns, loggers, utils
 from madeira import acm, aws_lambda, cloudformation, cloudfront, s3, session, sts
 
 
 class Tools(object):
 
     def __init__(self, arguments):
-        self._logger = madeira_utils.get_logger(
+        self._logger = loggers.get_logger(
             level=logging.DEBUG if arguments.get("--debug", False) else logging.INFO)
 
         self._mode = arguments.get("--mode", 'test')
         if self._mode not in ['test', 'production']:
             raise RuntimeError(f'Invalid mode: {self._mode}')
 
-        self._utils = utils.Utils(logger=self._logger)
         self._logger.info('Using mode: %s', self._mode)
-        self._app_config = self._utils.load_yaml('config.yaml')[self._mode]
+        self._app_config = utils.load_yaml('config.yaml')[self._mode]
         self._app_name_lower_case = self._app_config['name'].lower()
 
         # This Acm instance only to be used to create certificates for CloudFront
@@ -69,7 +67,7 @@ class Tools(object):
         ############################################################
         result = self._cloudformation.create_or_update_stack(
             self._app_config['name'],
-            self._utils.get_template_body("app"),
+            utils.get_template_body("app"),
             [
                 {"ParameterKey": "ApiConfigurationSecretJson",
                  "ParameterValue": json.dumps(self._app_config)},
@@ -78,7 +76,7 @@ class Tools(object):
                 {"ParameterKey": "ApiPersistenceBucketName",
                  "ParameterValue": self._app_config['api_persistence_bucket']},
                 {"ParameterKey": "ApiRouterFunctionCode",
-                 "ParameterValue": self._utils.get_file_content('functions/router.py')},
+                 "ParameterValue": utils.get_file_content('functions/router.py')},
                 {"ParameterKey": "ApiRouterFunctionLayerArns",
                  "ParameterValue": layer_arns_csv},
                 {"ParameterKey": "CdnBucketName",
@@ -94,7 +92,7 @@ class Tools(object):
         if result:
             # upload the UI to the CDN bucket + update CDN cache + assure CNAME is in place
             cdn = self._cloudfront.update_cdn_content(
-                self._app_config['cloudfront_ui_bucket'], self._utils.get_files_in_path('assets/'),
+                self._app_config['cloudfront_ui_bucket'], utils.get_files_in_path('assets/'),
                 f"Distribution for {self._app_config['name']} - {self._app_config['hostname']}")
             self._g_dns.assure_value(self._app_config['hostname'], cdn['DomainName'], 'CNAME')
             
