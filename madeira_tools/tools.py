@@ -8,14 +8,13 @@ from madeira import acm, aws_lambda, cloudformation, cloudfront, s3, session, st
 
 class Tools(object):
 
-    def __init__(self, arguments):
-        self._logger = loggers.get_logger(
-            level=logging.DEBUG if arguments.get("--debug", False) else logging.INFO)
+    def __init__(self, debug=False, mode='test', trace_boto3=False):
+        self._logger = loggers.get_logger(level=logging.DEBUG if debug else logging.INFO)
 
-        self._mode = arguments.get("--mode", 'test')
-        if self._mode not in ['test', 'production']:
-            raise RuntimeError(f'Invalid mode: {self._mode}')
+        if mode not in ['test', 'production']:
+            raise RuntimeError(f'Invalid mode: {mode}')
 
+        self._mode = mode
         self._logger.info('Using mode: %s', self._mode)
         self._app_config = utils.load_yaml('config.yaml')[self._mode]
         self._app_name_lower_case = self._app_config['name'].lower()
@@ -32,7 +31,7 @@ class Tools(object):
 
         self._g_dns = godaddy_dns.GoDaddyDns(logger=self._logger)
 
-        if arguments.get('--trace-boto3', False):
+        if trace_boto3:
             # extreme verbosity in boto3 code paths. useful for tracing AWS API calls that time out
             # after many retries without explaining why (happens with HTTP 500 responses)
             boto3.set_stream_logger('')
@@ -136,7 +135,7 @@ class Tools(object):
 
         # Delete lambda layers
         for lambda_layer in self._aws_lambda.list_layers():
-            if lambda_layer['LayerName'].startswith(self._app_name_lower_case):
+            if lambda_layer['LayerName'] in [self._app_name_lower_case, f"{self._app_name_lower_case}_dependencies"]:
                 for lambda_layer_version in self._aws_lambda.list_layer_versions(lambda_layer['LayerName']):
                     self._logger.info('Deleting lambda layer: %s version: %s',
                                       lambda_layer['LayerName'], lambda_layer_version['Version'])

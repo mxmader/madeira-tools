@@ -46,7 +46,7 @@ pip install -r /requirements.txt -t ./python
 deactivate
 
 echo "creating archive: ${layer_name}.zip"
-zip -r "${layer_name}.zip" ./python/
+zip -rq "${layer_name}.zip" ./python/
 
 echo "done creating archive; exiting container"
 exit

@@ -15,4 +15,8 @@ import docopt
 from madeira_tools import tools
 
 arguments = docopt.docopt(__doc__, help=True)
-tools.Tools(arguments).remove()
+tools.Tools(
+    debug=arguments.get('--debug'),
+    mode=arguments.get('--mode'),
+    trace_boto3=arguments.get('--trace-boto3')
+).remove()
