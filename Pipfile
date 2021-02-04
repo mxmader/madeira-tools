@@ -9,7 +9,7 @@ madeira-utils-editable = {path = "./../madeira-utils",editable = true}
 madeira-editable = {editable = true, path = "./../madeira"}
 
 [packages]
-madeira_tools = {path = ".",editable = true}
+madeira_tools = {path = "."}
 madeira-utils = "*"
 madeira = "*"
 

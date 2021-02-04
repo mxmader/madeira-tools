@@ -18,10 +18,10 @@ class App(base.Base):
         # deploy Lambda Layers for the API
         ############################################################
         layers = {
-            self._app_name_lower_case:
+            self._app_name:
                 {"path": "layers/api"},
-            f"{self._app_name_lower_case}_dependencies":
-                {"path": f"layers/{self._app_name_lower_case}_dependencies.zip"},
+            f"{self._app_name}_dependencies":
+                {"path": f"layers/{self._app_name}_dependencies.zip"},
         }
         self._aws_lambda.deploy_layers(layers)
         layer_arns_csv = ','.join([layer_meta['arn'] for name, layer_meta in layers.items()])
@@ -49,7 +49,7 @@ class App(base.Base):
                 {"ParameterKey": "CertificateArn",
                  "ParameterValue": acm_certificate_arn},
                 {"ParameterKey": "HostName",
-                 "ParameterValue": self._app_config['hostname']},
+                 "ParameterValue": self._app_config['hostname']}
             ],
             max_status_checks=30
         )
@@ -100,7 +100,7 @@ class App(base.Base):
 
         # Delete lambda layers
         for lambda_layer in self._aws_lambda.list_layers():
-            if lambda_layer['LayerName'] in [self._app_name_lower_case, f"{self._app_name_lower_case}_dependencies"]:
+            if lambda_layer['LayerName'] in [self._app_name, f"{self._app_name}_dependencies"]:
                 for lambda_layer_version in self._aws_lambda.list_layer_versions(lambda_layer['LayerName']):
                     self._logger.info('Deleting lambda layer: %s version: %s',
                                       lambda_layer['LayerName'], lambda_layer_version['Version'])

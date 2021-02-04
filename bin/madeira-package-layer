@@ -22,8 +22,13 @@ container="layer-packaging-$(uuid)"
 base_dir=$(cd "$(dirname "$0")"; pwd)
 
 create_layer_tempfile=$(mktemp)
+trap '{
+  rm -f -- "$create_layer_tempfile";
+  echo "deleting container";
+  docker rm "${container}";
+}' EXIT
+
 echo "Using ${create_layer_tempfile} for docker run"
-trap '{ rm -f -- "$create_layer_tempfile"; }' EXIT
 
 cat <<EOF > "${create_layer_tempfile}"
 #!/bin/bash
@@ -64,6 +69,3 @@ docker run --name "${container}" -it \
 echo "copying layer ZIP from container"
 mkdir -p "${destination_path}"
 docker cp "${container}:${layer_name}.zip" "${destination_path}"
-
-echo "deleting container"
-docker rm "${container}"

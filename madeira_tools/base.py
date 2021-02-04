@@ -17,7 +17,7 @@ class Base(ABC):
         self._mode = mode
         self._logger.info('Using mode: %s', self._mode)
         self._app_config = app_config[self._mode]
-        self._app_name_lower_case = self._app_config['name'].lower()
+        self._app_name = self._app_config['name']
 
         # This Acm instance only to be used to create certificates for CloudFront
         self._acm = acm.Acm(logger=self._logger, region='us-east-1')
