@@ -12,9 +12,7 @@ class App(base.Base):
         ############################################################
         # deploy ACM certificate for CloudFront (must be in us-east-1)
         ############################################################
-        acm_certificate_arn, dns_meta = self._acm.request_cert_with_dns_validation(self._app_config['hostname'])
-        self._g_dns.assure_value(dns_meta['Name'], dns_meta['Value'], dns_meta['Type'])
-        self._acm.wait_for_issuance(acm_certificate_arn)
+        acm_certificate_arn = self.deploy_cert()
 
         ############################################################
         # deploy Lambda Layers for the API
@@ -58,10 +56,7 @@ class App(base.Base):
 
         if result:
             # upload the UI to the CDN bucket + update CDN cache + assure CNAME is in place
-            cdn = self._cloudfront.update_cdn_content(
-                self._app_config['cloudfront_ui_bucket'], utils.get_files_in_path('assets/'),
-                f"Distribution for {self._app_config['name']} - {self._app_config['hostname']}")
-            self._g_dns.assure_value(self._app_config['hostname'], cdn['DomainName'], 'CNAME')
+            self.update_cdn()
 
     def remove(self):
         self._init_message()

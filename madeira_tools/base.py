@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import logging
 
 import boto3
-from madeira_utils import godaddy_dns, loggers
+from madeira_utils import godaddy_dns, loggers, utils
 from madeira import acm, aws_lambda, cloudformation, cloudfront, s3, session, sts
 
 
@@ -50,3 +50,16 @@ class Base(ABC):
     def remove(self):
         while False:
             yield None
+
+    def deploy_cert(self):
+        acm_certificate_arn, dns_meta = self._acm.request_cert_with_dns_validation(self._app_config['hostname'])
+        self._g_dns.assure_value(dns_meta['Name'], dns_meta['Value'], dns_meta['Type'])
+        self._acm.wait_for_issuance(acm_certificate_arn)
+        return acm_certificate_arn
+
+    def update_cdn(self):
+        # upload the UI to the CDN bucket + update CDN cache + assure CNAME is in place
+        cdn = self._cloudfront.update_cdn_content(
+            self._app_config['cloudfront_ui_bucket'], utils.get_files_in_path('assets'),
+            f"Distribution for {self._app_config['name']} - {self._app_config['hostname']}")
+        self._g_dns.assure_value(self._app_config['hostname'], cdn['DomainName'], 'CNAME')
