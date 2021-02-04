@@ -26,6 +26,9 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     packages=find_packages(exclude=['*.tests', '*.tests.*']),
+    package_data={
+      'madeira_tools': ['cf_templates/*']
+    },
     install_requires=[
         'boto3',
         'docopt',
