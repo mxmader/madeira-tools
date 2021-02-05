@@ -14,9 +14,10 @@ for deployment of test and production apps to AWS.
 `madeira-deploy --mode production`
 * Deploys the application to the `production` environment
 
-`madeira-package-layer <package name> <version>`
-* Packages 3rd party dependencies for use as AWS lambda function layers
+`madeira-package-layer <layer name>`
+* Packages dependencies for use as AWS lambda function layers
 * Must be run from application project root
+* References the `layer_requirements.txt` file in said project root
 
 `madeira-remove`
 * Removes the application from the `test` environment
