@@ -18,6 +18,7 @@ class Base(ABC):
         self._logger.info('Using mode: %s', self._mode)
         self._app_config = app_config[self._mode]
         self._app_name = self._app_config['name']
+        self._cdn_name = f"Distribution for {self._app_name} - {self._app_config['hostname']}"
 
         # This Acm instance only to be used to create certificates for CloudFront
         self._acm = acm.Acm(logger=self._logger, region='us-east-1')
@@ -59,7 +60,7 @@ class Base(ABC):
 
     def update_cdn(self):
         # upload the UI to the CDN bucket + update CDN cache + assure CNAME is in place
-        cdn = self._cloudfront.update_cdn_content(
-            self._app_config['cloudfront_ui_bucket'], utils.get_files_in_path('assets'),
-            f"Distribution for {self._app_config['name']} - {self._app_config['hostname']}")
+        cdn = self._cloudfront.get_distribution_by_comment(self._cdn_name)
+        self._cloudfront.update_cdn_content(
+            cdn['Id'], self._app_config['cloudfront_ui_bucket'], utils.get_files_in_path('assets'))
         self._g_dns.assure_value(self._app_config['hostname'], cdn['DomainName'], 'CNAME')

@@ -9,6 +9,10 @@ Parameters:
     Description: S3 bucket from which front end assets will be cached by CDN
     Type: String
 
+  CdnName:
+    Description: Content distribution name (comment)
+    Type: String
+
   CertificateArn:
     Description: ACM certificate ARN (from us-east-1) to be used by front-end web service
     Type: String
@@ -59,8 +63,7 @@ Resources:
       DistributionConfig:
         Aliases:
           - !Ref HostName
-
-        Comment: !Sub "Distribution for ${AppName} - ${HostName}"
+        Comment: !Ref CdnName
         DefaultCacheBehavior:
           AllowedMethods:
             - GET

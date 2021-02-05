@@ -46,6 +46,8 @@ class App(base.Base):
                  "ParameterValue": layer_arns_csv},
                 {"ParameterKey": "CdnBucketName",
                  "ParameterValue": self._app_config['cloudfront_ui_bucket']},
+                {"ParameterKey": "CdnName",
+                 "ParameterValue": self._cdn_name},
                 {"ParameterKey": "CertificateArn",
                  "ParameterValue": acm_certificate_arn},
                 {"ParameterKey": "HostName",

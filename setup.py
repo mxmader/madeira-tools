@@ -38,6 +38,7 @@ setup(
     ],
     scripts=[
         'bin/madeira-deploy',
+        'bin/madeira-clean-layers',
         'bin/madeira-package-layer',
         'bin/madeira-remove',
         'bin/madeira-run-dev'

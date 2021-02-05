@@ -11,6 +11,7 @@ class Dispatch(object):
 
         self._logger.debug('Loading deployment module: %s', app_config['app_type'])
         module = importlib.import_module(f"{__package__}.{app_config['app_type']}")
+        # noinspection PyUnresolvedReferences
         self._app = module.App(app_config, debug=debug, mode=mode, trace_boto3=trace_boto3)
 
     def deploy(self):
