@@ -37,10 +37,14 @@ setup(
         'requests'
     ],
     scripts=[
+        'bin/madeira-build-api',
+        'bin/madeira-build-ui',
         'bin/madeira-deploy',
         'bin/madeira-clean-layers',
         'bin/madeira-package-layer',
         'bin/madeira-remove',
-        'bin/madeira-run-dev'
+        'bin/madeira-run-api',
+        'bin/madeira-run-dev',
+        'bin/madeira-run-ui',
     ]
 )

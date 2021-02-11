@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cedb3a2-1e79-4c3a-9090-e819875c5cc9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/bin/madeira-clean-layers" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/madeira_tools/maintenance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/madeira-tools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/madeira-tools.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/cf_templates/cloudfront_app.yml" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/cf_templates/cloudfront_app.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/cf_templates/cloudfront_site.yml" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/cf_templates/cloudfront_site.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/cloudfront_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/cloudfront_app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/cloudfront_site.py" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/cloudfront_site.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/madeira_tools/dispatch.py" beforeDir="false" afterPath="$PROJECT_DIR$/madeira_tools/dispatch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +21,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../strava" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
