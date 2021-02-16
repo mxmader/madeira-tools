@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import subprocess
 import time
 
@@ -112,6 +113,40 @@ class DockerDev(object):
             self.run_command(args)
             time.sleep(2)
 
+    def run_dev(self, mock_data=False, madeira_dev=False, shell=False):
+
+        xfce4_terminal = '/usr/bin/xfce4-terminal'
+
+        if not os.path.exists(xfce4_terminal):
+            self._logger.error("%s cannot be found", xfce4_terminal)
+            return False
+
+        pipenv = shutil.which('pipenv')
+        api_command = f'{pipenv} run madeira-run-api'
+
+        if mock_data:
+            api_command += ' --mock-data'
+        if madeira_dev:
+            api_command += ' --madeira-dev'
+        if shell:
+            api_command += ' --shell'
+
+        command = [
+            xfce4_terminal,
+            '--title', self.ui_image_name, '--command', f'{pipenv} run madeira-run-ui',
+            '--tab', '--title', self.api_image_name, '--command', api_command
+        ]
+
+        for container in (self.api_image_name, self.ui_image_name):
+            container_is_running = bool(self.run_command(
+                f'docker ps -q -f name={container}'.split(' '), capture_output=True).stdout.decode('utf-8').strip())
+            self._logger.debug("container: %s is running: %s", container, container_is_running)
+            if container_is_running:
+                self.run_command(f'docker stop {container}'.split(' '))
+
+        self._logger.info("Starting terminal for %s dev", self.app_name)
+        self.run_command(command)
+
     def run_ui(self):
         return self.run_command([
             "docker",
@@ -128,5 +163,5 @@ class DockerDev(object):
         ])
 
     @staticmethod
-    def run_command(args):
-        return subprocess.run(args)
+    def run_command(args, **kwargs):
+        return subprocess.run(args, **kwargs)
