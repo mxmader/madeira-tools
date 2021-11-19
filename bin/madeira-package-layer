@@ -37,13 +37,13 @@ set -e
 
 echo "installing packaging utilities"
 yum install -y zip
-amazon-linux-extras install -y python3.8
-python3.8 -m pip install --upgrade pip
-python3.8 -m pip install virtualenv
+amazon-linux-extras install -y python3.9
+python3.9 -m pip install --upgrade pip
+python3.9 -m pip install virtualenv
 
 # layer_name to be set by 'docker run'
 echo "creating venv for layer: ${layer_name}"
-python3.8 -m venv "${layer_name}"
+python3.9 -m venv "${layer_name}"
 source "${layer_name}/bin/activate"
 
 echo "installing python layer requirements"
@@ -58,11 +58,13 @@ exit
 EOF
 chmod +x "${create_layer_tempfile}"
 
+# TODO: could we use public.ecr.aws/sam/build-python3.9:latest and trim back
+#   some of the above cruft?
 docker run --name "${container}" -it \
   -e layer_name="${layer_name}" \
   -v "${layer_requirements_path}":/requirements.txt \
   -v "${create_layer_tempfile}":/madeira-create-layer \
-  amazonlinux:2.0.20191016.0 \
+  public.ecr.aws/sam/build-provided.al2:latest \
   ./madeira-create-layer
 
 # back in local machine user shell
