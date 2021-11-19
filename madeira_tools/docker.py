@@ -4,7 +4,8 @@ import shutil
 import subprocess
 import time
 
-from madeira_utils import loggers, utils
+from madeira_utils import loggers
+from madeira_utils import utils
 
 
 class DockerDev(object):
@@ -35,6 +36,10 @@ class DockerDev(object):
         self._logger.info(f"Building container image: {name} using file: {file}")
         return self.run_command(f"docker build -t {name} . --file ./docker/{file}".split(" "))
 
+    def _image_exists(self, name):
+        """Checks to see that the given container image exists."""
+        self.run_command(f"docker image exists {name}".split(" "), check=True)
+
     def _prune_images(self):
         self._logger.info("Pruning any dangling docker images")
         return self.run_command("docker image prune -f".split(" "))
@@ -57,6 +62,8 @@ class DockerDev(object):
             self._logger.warning(
                 'Running the API container not supported for app type: %s', self.app_type)
             return
+
+        self._image_exists(self.api_image_name)
 
         args = [
             "docker",
@@ -114,7 +121,6 @@ class DockerDev(object):
             time.sleep(2)
 
     def run_dev(self, mock_data=False, madeira_dev=False, shell=False):
-
         xfce4_terminal = '/usr/bin/xfce4-terminal'
 
         if not os.path.exists(xfce4_terminal):
@@ -148,6 +154,8 @@ class DockerDev(object):
         self.run_command(command)
 
     def run_ui(self):
+        self._image_exists(self.ui_image_name)
+
         return self.run_command([
             "docker",
             "run",
@@ -155,6 +163,7 @@ class DockerDev(object):
             "--tty",
             "--rm",
             "--volume", f"{self.base_dir}/assets:/usr/share/nginx/html",
+            # TODO: run multiple different project UIs concurrently
             "-p", "0.0.0.0:8083:80",
             "--name", self.ui_image_name,
             "--hostname", self.ui_image_name,
