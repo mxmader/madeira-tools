@@ -28,6 +28,12 @@ for deployment of test and production apps to AWS.
 `madeira-remove --mode production`
 * Removes the application from the `production` environment
 
+`madeira-run-api`
+* Runs the API container, if any, and attaches to its shell or log output in the foreground
+
 `madeira-run-dev`
 * Opens XFCE4 terminal with 2 tabs - each for API and UI container runtime + logging
 * Must be run from application project root
+
+`madeira-run-ui`
+* Runs the API container, if any, and attaches to its shell or log output in the foreground
