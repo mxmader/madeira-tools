@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 madeira-utils-editable = {path = "./../madeira-utils",editable = true}
 madeira-editable = {editable = true, path = "./../madeira"}
+setuptools = "*"
 
 [packages]
 madeira_tools = {path = ".",editable = true}

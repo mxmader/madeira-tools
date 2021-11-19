@@ -39,8 +39,8 @@ setup(
     scripts=[
         'bin/madeira-build-api',
         'bin/madeira-build-ui',
-        'bin/madeira-deploy',
         'bin/madeira-clean-layers',
+        'bin/madeira-deploy',
         'bin/madeira-package-layer',
         'bin/madeira-remove',
         'bin/madeira-run-api',
