@@ -66,7 +66,7 @@ class DockerDev(object):
         self._image_exists(self.api_image_name)
 
         args = [
-            "docker",
+            "docker",  # TODO: podman?
             "run",
             "--interactive",
             "--tty",
@@ -99,13 +99,12 @@ class DockerDev(object):
         args.extend([
             "--volume", f"{self.base_dir}/api.py:/root/api.py",
             "--volume", f"{self.base_dir}/config.yaml:/root/config.yaml",
-            "--volume", f"{self.base_dir}/gunicorn.py:/root/gunicorn.py",
+            "--volume", f"{self.base_dir}/gunicorn_container.py:/root/gunicorn.py",
             "--volume", f"{self.base_dir}/functions:/root/functions",
             "--volume", f"{self.base_dir}/layers:/root/layers",
-            "-p", "0.0.0.0:8080:8080",
+            "-p", "127.0.0.1:8080:8080",
             "--name", self.api_image_name,
-            "--hostname", self.api_image_name,
-            "--network", "bridge"
+            "--hostname", self.api_image_name
         ])
 
         args.append(f"{self.api_image_local_path}")
@@ -117,6 +116,7 @@ class DockerDev(object):
 
         while True:
             self._logger.info("Starting API container")
+            self._logger.debug("Command:\n%s", ' '.join(args))
             self.run_command(args)
             time.sleep(2)
 
@@ -154,6 +154,7 @@ class DockerDev(object):
         self.run_command(command)
 
     def run_ui(self):
+        ui_container_port = self.app_config.get('ui_port', 8081)
         self._image_exists(self.ui_image_name)
 
         return self.run_command([
@@ -163,11 +164,9 @@ class DockerDev(object):
             "--tty",
             "--rm",
             "--volume", f"{self.base_dir}/assets:/usr/share/nginx/html",
-            # TODO: run multiple different project UIs concurrently
-            "-p", "0.0.0.0:8083:80",
+            "-p", f"127.0.0.1:{ui_container_port}:80",
             "--name", self.ui_image_name,
             "--hostname", self.ui_image_name,
-            "--network", "bridge",
             self.ui_image_local_path
         ])
 
