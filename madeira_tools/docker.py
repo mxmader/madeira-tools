@@ -38,7 +38,7 @@ class DockerDev(object):
 
     def _image_exists(self, name):
         """Checks to see that the given container image exists."""
-        self.run_command(f"docker image exists {name}".split(" "), check=True)
+        self.run_command(f"docker image inspect {name}".split(" "), check=True)
 
     def _prune_images(self):
         self._logger.info("Pruning any dangling docker images")
