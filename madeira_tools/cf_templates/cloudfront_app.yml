@@ -224,7 +224,7 @@ Resources:
       MemorySize: 128
       PackageType: Zip
       Role: !GetAtt ApiLambdaRole.Arn
-      Runtime: python3.9
+      Runtime: python3.11
       Timeout: 30
 
   ApiRouterFunctionLogGroup:
